@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Bag — La Perlyn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Annie+Use+Your+Telescope&family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header id="siteHeader" class="solid">
+  <div class="wrap nav">
+    <a class="nav-logo logo-font" href="index.html">La Perlyn</a>
+    <nav class="nav-center"><a href="index.html">Home</a><a href="index.html#featured">Sarees</a><a href="wishlist.html">Wishlist</a></nav>
+    <div class="nav-right">
+      <a href="wishlist.html">Wishlist<span class="badge" id="wishCount">0</span></a>
+      <a href="cart.html">Cart<span class="badge" id="cartCount">0</span></a>
+      <button class="menu-btn" id="menuBtn" aria-expanded="false">☰</button>
+    </div>
+  </div>
+  <div class="nav-links-mobile" id="navMobile"><a href="index.html">Home</a><a href="index.html#featured">Sarees</a><a href="wishlist.html">Wishlist</a></div>
+</header>
+
+<div class="page-head"><h1>Your Bag</h1></div>
+
+<main class="wrap" id="cartRoot" style="padding-bottom:120px;"></main>
+
+<footer><div class="wrap foot-bottom"><span>© 2026 La Perlyn. All rights reserved.</span><a href="index.html">← Continue shopping</a></div></footer>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script>
+  function render(){
+    const cart = getCart();
+    const root = document.getElementById('cartRoot');
+    if (!cart.length){
+      root.innerHTML = `<div class="empty-state"><h2>Your bag is empty</h2><p>Discover pieces you'll love in the collection.</p><a class="btn btn-solid" style="margin-top:20px" href="index.html#featured">Shop the Edit</a></div>`;
+      return;
+    }
+    const t = cartTotals();
+    root.innerHTML = `
+      <div class="cart-layout">
+        <div>
+          ${cart.map(l => { const p = getProduct(l.id); if(!p) return ''; return `
+            <div class="cart-line" data-id="${p.id}">
+              <img src="${p.images[0]}" alt="${p.name}">
+              <div>
+                <h4>${p.name}</h4>
+                <div class="muted">${money(p.price)} each</div>
+                <div class="remove-line" data-remove="${p.id}">Remove</div>
+              </div>
+              <div class="qty-stepper">
+                <button data-minus="${p.id}">−</button><span>${l.qty}</span><button data-plus="${p.id}">+</button>
+              </div>
+              <div style="font-weight:500;">${money(p.price*l.qty)}</div>
+            </div>`; }).join('')}
+        </div>
+        <div class="summary-card">
+          <h3>Order Summary</h3>
+          <div class="summary-row"><span>Subtotal</span><span>${money(t.subtotal)}</span></div>
+          <div class="summary-row"><span>Shipping</span><span>${t.shipping===0?'Free':money(t.shipping)}</span></div>
+          <div class="summary-row"><span>Tax (5%)</span><span>${money(t.tax)}</span></div>
+          <div class="summary-row total"><span>Total</span><span>${money(t.total)}</span></div>
+          <a class="btn btn-lavender btn-block" style="margin-top:22px;" href="checkout.html">Proceed to Checkout</a>
+        </div>
+      </div>`;
+
+    root.querySelectorAll('[data-plus]').forEach(b => b.addEventListener('click', () => { const c=getCart(); const l=c.find(x=>x.id===b.dataset.plus); updateQty(b.dataset.plus, l.qty+1); render(); }));
+    root.querySelectorAll('[data-minus]').forEach(b => b.addEventListener('click', () => { const c=getCart(); const l=c.find(x=>x.id===b.dataset.minus); updateQty(b.dataset.minus, l.qty-1); render(); }));
+    root.querySelectorAll('[data-remove]').forEach(b => b.addEventListener('click', () => { removeFromCart(b.dataset.remove); render(); }));
+  }
+  render();
+</script>
+</body>
+</html>

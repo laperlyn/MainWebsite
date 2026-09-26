@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — La Perlyn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Annie+Use+Your+Telescope&family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header id="siteHeader" class="solid">
+  <div class="wrap nav">
+    <a class="nav-logo logo-font" href="index.html">La Perlyn</a>
+    <nav class="nav-center"><a href="cart.html">Back to Bag</a></nav>
+    <div class="nav-right"><a href="cart.html">Cart<span class="badge" id="cartCount">0</span></a><button class="menu-btn" id="menuBtn" aria-expanded="false">☰</button></div>
+  </div>
+  <div class="nav-links-mobile" id="navMobile"><a href="cart.html">Back to Bag</a></div>
+</header>
+
+<div class="page-head"><h1>Checkout</h1></div>
+
+<main class="wrap" id="checkoutRoot" style="padding-bottom:120px;"></main>
+
+<footer><div class="wrap foot-bottom"><span>© 2026 La Perlyn. All rights reserved.</span><a href="cart.html">← Back to bag</a></div></footer>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script>
+  const cart = getCart();
+  const root = document.getElementById('checkoutRoot');
+  if (!cart.length){
+    root.innerHTML = `<div class="empty-state"><h2>Your bag is empty</h2><a class="btn btn-solid" style="margin-top:20px" href="index.html#featured">Shop the Edit</a></div>`;
+  } else {
+    const t = cartTotals();
+    root.innerHTML = `
+      <div class="checkout-layout">
+        <form class="form-card" id="checkoutForm">
+          <h3>Shipping Details <span style="font-size:12px;color:var(--charcoal-soft);font-weight:400;">(* required)</span></h3>
+          <div class="form-row"><input required placeholder="First name *" name="firstName"><input required placeholder="Last name *" name="lastName"></div>
+          <div class="form-row"><input required type="email" placeholder="Email *" name="email"><input required type="tel" placeholder="Phone *" name="phone"></div>
+          <input required placeholder="Address *" name="address" style="margin-bottom:16px;">
+          <div class="form-row"><input required placeholder="City *" name="city"><input required placeholder="State *" name="state"></div>
+          <div class="form-row"><input required placeholder="PIN code *" name="pincode"><input required placeholder="Country *" name="country" value="India"></div>
+          <h3 style="margin-top:8px;">Payment</h3>
+          <select name="payment" style="margin-bottom:8px;">
+            <option>Cash on Delivery</option>
+            <option>UPI</option>
+            <option>Credit / Debit Card</option>
+          </select>
+          <button class="btn btn-lavender btn-block" type="submit" style="margin-top:22px;">Place Order — ${money(t.total)}</button>
+        </form>
+        <div class="summary-card">
+          <h3>Order Summary</h3>
+          ${cart.map(l => { const p = getProduct(l.id); if(!p) return ''; return `<div class="checkout-item"><span>${p.name} × ${l.qty}</span><span>${money(p.price*l.qty)}</span></div>`; }).join('')}
+          <div class="summary-row" style="margin-top:14px;"><span>Subtotal</span><span>${money(t.subtotal)}</span></div>
+          <div class="summary-row"><span>Shipping</span><span>${t.shipping===0?'Free':money(t.shipping)}</span></div>
+          <div class="summary-row"><span>Tax (5%)</span><span>${money(t.tax)}</span></div>
+          <div class="summary-row total"><span>Total</span><span>${money(t.total)}</span></div>
+        </div>
+      </div>`;
+
+    document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = Object.fromEntries(new FormData(e.target).entries());
+      const payload = { customer: fd, items: cart.map(l => ({id:l.id, qty:l.qty, name:getProduct(l.id)?.name, price:getProduct(l.id)?.price})), totals: t };
+      let order;
+      try {
+        const res = await fetch('/api/orders', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+        if (!res.ok) throw new Error('backend unavailable');
+        order = await res.json();
+      } catch {
+        order = { id: 'LP' + Date.now(), ...payload, status:'placed', createdAt: new Date().toISOString() };
+      }
+      store.set(LS_ORDER, order);
+      saveCart([]);
+      location.href = 'order-placed.html?id=' + order.id;
+    });
+  }
+</script>
+</body>
+</html>

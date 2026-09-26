@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F3E7D3"/>
+      <stop offset="50%" stop-color="#D4B483"/>
+      <stop offset="100%" stop-color="#A88B5A"/>
+    </linearGradient>
+  </defs>
+  <circle cx="50" cy="50" r="46" fill="#2F2F2F" stroke="url(#goldGrad)" stroke-width="2.5"/>
+  <circle cx="50" cy="50" r="42" fill="none" stroke="url(#goldGrad)" stroke-width="0.75" stroke-dasharray="2 3"/>
+  <text x="50" y="62" font-family="'Cormorant Garamond', 'Georgia', serif" font-size="38" font-weight="600" fill="url(#goldGrad)" text-anchor="middle" letter-spacing="1">LP</text>
+  <path d="M50 18 L52 23 L57 25 L52 27 L50 32 L48 27 L43 25 L48 23 Z" fill="url(#goldGrad)"/>
+</svg>

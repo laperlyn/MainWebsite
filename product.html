@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product — La Perlyn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Annie+Use+Your+Telescope&family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header id="siteHeader" class="solid">
+  <div class="wrap nav">
+    <a class="nav-logo logo-font" href="index.html">La Perlyn</a>
+    <nav class="nav-center">
+      <a href="index.html">Home</a>
+      <a href="index.html#categories">Collections</a>
+      <a href="index.html#featured">Sarees</a>
+      <a href="index.html#story">About</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <a href="wishlist.html">Wishlist<span class="badge" id="wishCount">0</span></a>
+      <a href="cart.html">Cart<span class="badge" id="cartCount">0</span></a>
+      <button class="menu-btn" id="menuBtn" aria-expanded="false">☰</button>
+    </div>
+  </div>
+  <div class="nav-links-mobile" id="navMobile">
+    <a href="index.html">Home</a><a href="index.html#categories">Collections</a>
+    <a href="index.html#featured">Sarees</a><a href="index.html#story">About</a><a href="index.html#contact">Contact</a>
+  </div>
+</header>
+
+<main class="wrap" id="pdRoot"></main>
+
+<footer>
+  <div class="wrap foot-bottom">
+    <span>© 2026 La Perlyn. All rights reserved.</span>
+    <a href="index.html">← Back to shop</a>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script>
+  const id = new URLSearchParams(location.search).get('id');
+  const p = getProduct(id);
+  const root = document.getElementById('pdRoot');
+
+  if (!p){
+    root.innerHTML = `<div class="empty-state"><h2>Saree not found</h2><p>It may have sold out or the link is outdated.</p><a class="btn btn-solid" style="margin-top:20px" href="index.html">Back to shop</a></div>`;
+  } else {
+    document.title = p.name + ' — La Perlyn';
+    const wished = getWishlist().includes(p.id);
+    root.innerHTML = `
+      <div class="product-detail">
+        <div>
+          <div class="pd-gallery-main"><img id="pdMain" src="${p.images[0]}" alt="${p.name}"></div>
+          <div class="pd-thumbs">
+            ${p.images.map((img,i) => `<img src="${img}" class="${i===0?'active':''}" data-src="${img}" alt="${p.name} view ${i+1}">`).join('')}
+          </div>
+        </div>
+        <div class="pd-info">
+          <h1>${p.name}</h1>
+          <div class="pd-price">${money(p.price)}${p.mrp?` <span class="was">${money(p.mrp)}</span>`:''}</div>
+          <p class="pd-desc">${p.desc}</p>
+          <div class="pd-meta">
+            <div><span>Fabric</span><span>${p.fabric}</span></div>
+            <div><span>Blouse</span><span>${p.blouse}</span></div>
+            <div><span>Length</span><span>${p.length}</span></div>
+            <div><span>Category</span><span style="text-transform:capitalize">${p.category}</span></div>
+          </div>
+          <div class="pd-qty">
+            <span>Qty</span>
+            <button id="qtyMinus">−</button><span id="qtyVal">1</span><button id="qtyPlus">+</button>
+          </div>
+          <div class="pd-actions">
+            <button class="btn btn-lavender" id="addBtn">Add to Cart</button>
+            <button class="btn btn-outline-dark wishlist-toggle ${wished?'active':''}" id="pdWish" data-id="${p.id}">${wished?'♥ Saved':'♡ Wishlist'}</button>
+          </div>
+        </div>
+      </div>
+      <section class="section pd-related">
+        <div class="section-head reveal"><h2>You may also like</h2></div>
+        <div class="product-grid reveal" id="relatedGrid"></div>
+      </section>`;
+
+    let qty = 1;
+    const addBtn = document.getElementById('addBtn');
+    document.getElementById('qtyMinus').addEventListener('click', () => { qty = Math.max(1, qty-1); document.getElementById('qtyVal').textContent = qty; addBtn.textContent = 'Add to Cart'; });
+    document.getElementById('qtyPlus').addEventListener('click', () => { qty += 1; document.getElementById('qtyVal').textContent = qty; addBtn.textContent = 'Add to Cart'; });
+    addBtn.addEventListener('click', function(){ addToCart(p.id, qty); this.textContent = 'Added ✓'; });
+    document.getElementById('pdWish').addEventListener('click', function(){
+      const active = toggleWishlist(p.id);
+      this.classList.toggle('active', active);
+      this.textContent = active ? '♥ Saved' : '♡ Wishlist';
+    });
+    document.querySelectorAll('.pd-thumbs img').forEach(t => t.addEventListener('click', () => {
+      document.getElementById('pdMain').src = t.dataset.src;
+      document.querySelectorAll('.pd-thumbs img').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+    }));
+
+    const related = PRODUCTS.filter(x => x.category === p.category && x.id !== p.id).slice(0,4);
+    const fill = related.length < 4 ? PRODUCTS.filter(x => x.id !== p.id && !related.includes(x)).slice(0, 4-related.length) : [];
+    document.getElementById('relatedGrid').innerHTML = [...related, ...fill].map(productCardHTML).join('');
+    bindWishlistButtons(document.getElementById('relatedGrid'));
+  }
+</script>
+</body>
+</html>

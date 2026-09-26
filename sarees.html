@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Sarees — La Perlyn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Annie+Use+Your+Telescope&family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header id="siteHeader" class="solid">
+  <div class="wrap nav">
+    <a class="nav-logo logo-font" href="index.html">La Perlyn</a>
+    <nav class="nav-center">
+      <a href="index.html">Home</a>
+      <a href="index.html#categories">Collections</a>
+      <a href="sarees.html" style="font-weight:500;">All Sarees</a>
+      <a href="index.html#story">About</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <a href="wishlist.html">Wishlist<span class="badge" id="wishCount">0</span></a>
+      <a href="cart.html">Cart<span class="badge" id="cartCount">0</span></a>
+      <button class="menu-btn" id="menuBtn" aria-expanded="false">☰</button>
+    </div>
+  </div>
+  <div class="nav-links-mobile" id="navMobile">
+    <a href="index.html">Home</a>
+    <a href="index.html#categories">Collections</a>
+    <a href="sarees.html">All Sarees</a>
+    <a href="index.html#story">About</a>
+    <a href="index.html#contact">Contact</a>
+  </div>
+</header>
+
+<div class="page-head">
+  <h1>The Saree Collection</h1>
+  <p class="breadcrumb"><a href="index.html">Home</a> / All Sarees</p>
+</div>
+
+<main class="wrap" style="padding-bottom:120px;">
+  <div class="filter-bar" id="filterBar">
+    <button class="filter-btn active" data-cat="all">All Pieces</button>
+    <button class="filter-btn" data-cat="silk">Silk</button>
+    <button class="filter-btn" data-cat="cotton">Cotton</button>
+    <button class="filter-btn" data-cat="linen">Linen</button>
+    <button class="filter-btn" data-cat="festive">Festive</button>
+    <button class="filter-btn" data-cat="wedding">Wedding</button>
+  </div>
+  <div class="product-grid" id="productGrid"></div>
+</main>
+
+<footer>
+  <div class="wrap foot-bottom">
+    <span>© 2026 La Perlyn. All rights reserved.</span>
+    <a href="index.html">← Return to Home</a>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script>
+  const grid = document.getElementById('productGrid');
+  const filterBtns = document.querySelectorAll('.filter-btn');
+
+  function renderCategory(cat) {
+    const list = cat === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.category === cat);
+    grid.innerHTML = list.map(productCardHTML).join('');
+    bindWishlistButtons(grid);
+  }
+
+  // Check URL param ?category=silk etc.
+  const urlCat = new URLSearchParams(location.search).get('category') || 'all';
+  filterBtns.forEach(btn => {
+    if (btn.dataset.cat === urlCat) {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderCategory(btn.dataset.cat);
+    });
+  });
+
+  renderCategory(urlCat);
+</script>
+</body>
+</html>

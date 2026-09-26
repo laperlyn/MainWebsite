@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Perlyn — Timeless Elegance, Woven for Every Story</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Annie+Use+Your+Telescope&family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header id="siteHeader">
+  <div class="wrap nav">
+    <a class="nav-logo logo-font" href="index.html">La Perlyn</a>
+    <nav class="nav-center">
+      <a href="index.html">Home</a>
+      <a href="index.html#categories">Collections</a>
+      <a href="index.html#featured">Featured</a>
+      <a href="sarees.html">All Sarees</a>
+      <a href="index.html#story">About</a>
+      <a href="index.html#reviews">Journal</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <div class="nav-right">
+      <a href="wishlist.html" aria-label="Wishlist">Wishlist<span class="badge" id="wishCount">0</span></a>
+      <a href="cart.html" aria-label="Cart">Cart<span class="badge" id="cartCount">0</span></a>
+      <button class="menu-btn" id="menuBtn" aria-label="Toggle menu" aria-expanded="false">☰</button>
+    </div>
+  </div>
+  <div class="nav-links-mobile" id="navMobile">
+    <a href="index.html">Home</a>
+    <a href="index.html#categories">Collections</a>
+    <a href="index.html#featured">Featured</a>
+    <a href="sarees.html">All Sarees</a>
+    <a href="index.html#story">About</a>
+    <a href="index.html#reviews">Journal</a>
+    <a href="index.html#contact">Contact</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- HERO: unchanged, left exactly as-is per instruction -->
+  <section class="hero">
+    <div class="hero-content">
+      <span class="eyebrow">La Perlyn — Handcrafted Sarees</span>
+      <h1>Timeless Elegance,<br>Woven for Every Story.</h1>
+      <p>Discover handcrafted sarees designed to celebrate tradition with modern sophistication.</p>
+      <div class="hero-actions">
+        <a class="btn btn-outline" href="index.html#featured">Shop Collection</a>
+        <a class="btn btn-outline" href="sarees.html">Explore New Arrivals</a>
+      </div>
+    </div>
+    <div class="hero-scroll"><span>Scroll</span><span class="line"></span></div>
+  </section>
+
+  <section class="section" id="categories">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Curation</span>
+        <h2>Browse by Fabric & Occasion</h2>
+        <p>Every weave has its purpose, its season, and its distinctive poetry.</p>
+      </div>
+      <div class="categories reveal" id="categoryGrid"></div>
+    </div>
+  </section>
+
+  <section class="section" id="featured" style="background:var(--panel);">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">The Edit</span>
+        <h2>Featured Collection</h2>
+        <p>Pieces chosen for their weave, their drape, and the occasions they're made for.</p>
+      </div>
+      <div class="product-grid reveal" id="productGrid"></div>
+      <div style="text-align:center;margin-top:56px;"><a class="btn btn-outline-dark" href="sarees.html">View All Sarees</a></div>
+    </div>
+  </section>
+
+  <section class="section" id="story">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Why La Perlyn</span>
+        <h2>Crafted with Intention</h2>
+      </div>
+      <div class="features reveal">
+        <div class="feature-card"><div class="feature-icon">✨</div><h3>Premium Fabrics</h3><p>Silks, linens, and cottons sourced for their weight, sheen, and drape — never for shortcuts.</p></div>
+        <div class="feature-card"><div class="feature-icon">🧵</div><h3>Handcrafted Excellence</h3><p>Every border and motif carries the hand of the artisan who made it — nothing mass-produced.</p></div>
+        <div class="feature-card"><div class="feature-icon">🚚</div><h3>Worldwide Shipping</h3><p>Insured, tracked delivery to your door, wherever your story is being written.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="reviews" style="background:var(--panel);">
+    <div class="wrap">
+      <div class="section-head reveal"><span class="eyebrow">Loved, Worn, Cherished</span><h2>What Our Customers Say</h2></div>
+      <div class="reviews reveal">
+        <div class="review-card"><div class="review-stars">★★★★★</div><p class="quote">"The drape alone tells you this isn't ordinary. It felt like it was made for me."</p><div class="review-name">— Ananya R.</div></div>
+        <div class="review-card"><div class="review-stars">★★★★★</div><p class="quote">"Wore it to my sister's wedding and haven't stopped receiving compliments since."</p><div class="review-name">— Priya M.</div></div>
+        <div class="review-card"><div class="review-stars">★★★★★</div><p class="quote">"Quiet luxury, exactly as promised. The packaging alone felt like a gift."</p><div class="review-name">— Divya K.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="contact">
+    <div class="newsletter-wrap">
+      <div class="newsletter-card reveal">
+        <span class="eyebrow">Join the List</span>
+        <h2>Stay Connected.</h2>
+        <p>Be the first to discover new collections and exclusive launches.</p>
+        <form class="nl-form" id="nlForm">
+          <input type="email" id="nlEmail" placeholder="Your email address" required aria-label="Email address">
+          <button class="btn btn-solid" type="submit">Subscribe</button>
+        </form>
+        <div class="nl-note" id="nlNote"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div><div class="foot-logo logo-font">La Perlyn</div><p>Handcrafted sarees, woven with tradition and worn with modern grace.</p>
+        <div class="foot-social"><a href="#" aria-label="Instagram">IG</a><a href="#" aria-label="Pinterest">P</a></div>
+      </div>
+      <div><h4>Shop</h4><ul>
+        <li><a href="sarees.html">Sarees</a></li>
+        <li><a href="index.html#featured">Sarees</a></li>
+        <li><a href="sarees.html">Festive</a></li>
+        <li><a href="sarees.html">Wedding</a></li>
+      </ul></div>
+      <div><h4>Company</h4><ul>
+        <li><a href="index.html#story">About</a></li>
+        <li><a href="#">Shipping</a></li>
+        <li><a href="#">Returns</a></li>
+      </ul></div>
+      <div><h4>Contact</h4><ul>
+        <li><a href="mailto:hello@laperlyn.example">hello@laperlyn.example</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="#">Pinterest</a></li>
+      </ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 La Perlyn. All rights reserved.</span>
+      <span>Designed for those who wear their story.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script>
+  const catGrid = document.getElementById('categoryGrid');
+  if (catGrid && typeof CATEGORIES !== 'undefined') {
+    catGrid.innerHTML = CATEGORIES.map(c => `
+      <a class="cat-card" href="sarees.html?category=${c.id}">
+        <img src="${c.img}" alt="${c.label}" loading="lazy" decoding="async">
+        <span class="cat-label">${c.label}</span>
+      </a>
+    `).join('');
+  }
+
+  const grid = document.getElementById('productGrid');
+  grid.innerHTML = PRODUCTS.slice(0,4).map(productCardHTML).join('');
+  bindWishlistButtons(grid);
+</script>
+</body>
+</html>

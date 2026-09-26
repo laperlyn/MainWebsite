@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wishlist — La Perlyn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Annie+Use+Your+Telescope&family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header id="siteHeader" class="solid">
+  <div class="wrap nav">
+    <a class="nav-logo logo-font" href="index.html">La Perlyn</a>
+    <nav class="nav-center"><a href="index.html">Home</a><a href="index.html#featured">Sarees</a><a href="cart.html">Bag</a></nav>
+    <div class="nav-right">
+      <a href="wishlist.html">Wishlist<span class="badge" id="wishCount">0</span></a>
+      <a href="cart.html">Cart<span class="badge" id="cartCount">0</span></a>
+      <button class="menu-btn" id="menuBtn" aria-expanded="false">☰</button>
+    </div>
+  </div>
+  <div class="nav-links-mobile" id="navMobile"><a href="index.html">Home</a><a href="index.html#featured">Sarees</a><a href="cart.html">Bag</a></div>
+</header>
+
+<div class="page-head"><h1>Your Wishlist</h1></div>
+
+<main class="wrap" id="wishRoot" style="padding-bottom:120px;"></main>
+
+<footer><div class="wrap foot-bottom"><span>© 2026 La Perlyn. All rights reserved.</span><a href="index.html">← Continue shopping</a></div></footer>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script>
+  function render(){
+    const ids = getWishlist();
+    const root = document.getElementById('wishRoot');
+    if (!ids.length){
+      root.innerHTML = `<div class="empty-state"><h2>Nothing saved yet</h2><p>Tap the heart on any piece to save it here.</p><a class="btn btn-solid" style="margin-top:20px" href="index.html#featured">Browse Sarees</a></div>`;
+      return;
+    }
+    const items = ids.map(getProduct).filter(Boolean);
+    root.innerHTML = `<div class="wishlist-grid">${items.map(productCardHTML).join('')}</div>`;
+    bindWishlistButtons(root);
+    root.querySelectorAll('.wishlist-toggle').forEach(btn => btn.addEventListener('click', () => setTimeout(render, 200)));
+  }
+  render();
+</script>
+</body>
+</html>

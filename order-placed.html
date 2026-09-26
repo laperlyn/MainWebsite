@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Placed — La Perlyn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Annie+Use+Your+Telescope&family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header id="siteHeader" class="solid">
+  <div class="wrap nav">
+    <a class="nav-logo logo-font" href="index.html">La Perlyn</a>
+    <nav class="nav-center"></nav>
+    <div class="nav-right"><a href="index.html">Continue Shopping</a></div>
+  </div>
+</header>
+
+<main class="wrap" id="opRoot"></main>
+
+<footer><div class="wrap foot-bottom"><span>© 2026 La Perlyn. All rights reserved.</span></div></footer>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script>
+  const id = new URLSearchParams(location.search).get('id');
+  const root = document.getElementById('opRoot');
+
+  async function load(){
+    let order = null;
+    try {
+      const res = await fetch('/api/orders/' + id);
+      if (res.ok) order = await res.json();
+    } catch {}
+    if (!order) order = store.get(LS_ORDER);
+
+    if (!order || (order.id !== id)){
+      root.innerHTML = `<div class="empty-state" style="padding-top:170px;"><h2>Order not found</h2><a class="btn btn-solid" style="margin-top:20px" href="index.html">Back to shop</a></div>`;
+      return;
+    }
+    root.innerHTML = `
+      <div class="order-placed">
+        <div class="order-check">✓</div>
+        <h1>Thank you, ${order.customer?.firstName || ''}!</h1>
+        <p>Your order has been placed successfully.</p>
+        <div class="order-id">ORDER ID: ${order.id}</div>
+        <div class="order-summary">
+          ${(order.items||[]).map(i => `<div class="checkout-item"><span>${i.name} × ${i.qty}</span><span>${money(i.price*i.qty)}</span></div>`).join('')}
+          <div class="summary-row total" style="margin-top:10px;"><span>Total Paid</span><span>${money(order.totals?.total||0)}</span></div>
+        </div>
+        <p style="font-size:14px;color:var(--charcoal-soft);">A confirmation has been sent to ${order.customer?.email || 'your email'}. Delivery to ${order.customer?.city || ''}, ${order.customer?.state || ''} typically takes 5–7 days.</p>
+        <a class="btn btn-lavender" style="margin-top:30px;" href="index.html">Continue Shopping</a>
+      </div>`;
+  }
+  load();
+</script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Local data & environment
+orders.json
+.env
+.env.*
+
+# Deployment & Build caches
+.vercel
+.netlify
+.wrangler
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
