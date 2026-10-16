@@ -1,0 +1,14 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link href="https://fonts.googleapis.com/css2?family=Annie+Use+Your+Telescope&family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"><title>Your Bag — La Perlyn</title></head><body data-solid>
+<div class="page-head"><h1>Your Bag</h1></div><main class="wrap" id="r" style="padding-bottom:120px"></main>
+<script src="data.js"></script><script src="app.js"></script>
+<script>
+function render(){const c=getCart(),r=document.getElementById('r');
+if(!c.length){r.innerHTML='<div class="empty"><h2>Your bag is empty</h2><p>Discover pieces you\'ll love in the collection.</p><a class="btn btn-solid" style="margin-top:20px" href="sarees.html">Shop Sarees</a></div>';return}
+const t=totals();
+r.innerHTML=`<div class="lay"><div>${c.map(l=>{const p=getProduct(l.id);return`<div class="line"><img src="${p.images[0]}" alt=""><div><h4>${p.name}</h4><div class="muted">${money(p.price)} each</div><div class="rm" data-rm="${p.id}">Remove</div></div><div class="step"><button data-m="${p.id}">−</button><span>${l.qty}</span><button data-p="${p.id}">+</button></div><b style="font-weight:500">${money(p.price*l.qty)}</b></div>`}).join('')}</div><div class="sum"><h3>Order Summary</h3><div class="row"><span>Subtotal</span><span>${money(t.sub)}</span></div><div class="row"><span>Shipping</span><span>${t.ship?money(t.ship):'Free'}</span></div><div class="row"><span>Tax (5%)</span><span>${money(t.tax)}</span></div><div class="row t"><span>Total</span><span>${money(t.total)}</span></div><a class="btn btn-lav block" style="margin-top:22px" href="checkout.html">Proceed to Checkout</a></div></div>`;
+const q=id=>getCart().find(x=>x.id===id).qty;
+r.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{updateQty(b.dataset.p,q(b.dataset.p)+1);render()});
+r.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{updateQty(b.dataset.m,q(b.dataset.m)-1);render()});
+r.querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{removeFromCart(b.dataset.rm);render()})}
+render();
+</script></body></html>

@@ -1,0 +1,11 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link href="https://fonts.googleapis.com/css2?family=Annie+Use+Your+Telescope&family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"><title>Order Placed — La Perlyn</title></head><body data-solid>
+<main class="wrap" id="r"></main>
+<script src="data.js"></script><script src="app.js"></script>
+<script>
+(async()=>{const id=new URLSearchParams(location.search).get('id');let o=null;
+try{const x=await fetch('/api/orders/'+id);if(x.ok)o=await x.json()}catch{}
+if(!o)try{o=JSON.parse(localStorage.getItem(LS.o))}catch{}
+const r=document.getElementById('r');
+if(!o||o.id!==id){r.innerHTML='<div class="empty" style="padding-top:170px"><h2>Order not found</h2><a class="btn btn-solid" style="margin-top:20px" href="index.html">Back to shop</a></div>';return}
+r.innerHTML=`<div class="op"><div class="ck">✓</div><h1>Thank you, ${o.customer?.firstName||''}!</h1><p style="margin-top:10px">Your order has been placed successfully.</p><p class="muted" style="margin-top:8px;letter-spacing:.05em">ORDER ID: ${o.id}</p><div class="osum">${o.items.map(i=>`<div class="row"><span>${i.name} × ${i.qty}</span><span>${money(i.price*i.qty)}</span></div>`).join('')}<div class="row t"><span>Total</span><span>${money(o.totals.total)}</span></div></div><p class="muted">Confirmation sent to ${o.customer?.email||'your email'}. Delivery typically takes 5–7 days.</p><a class="btn btn-lav" style="margin-top:30px" href="index.html">Continue Shopping</a></div>`})()
+</script></body></html>

@@ -1,0 +1,6 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link href="https://fonts.googleapis.com/css2?family=Annie+Use+Your+Telescope&family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"><title>Wishlist — La Perlyn</title></head><body data-solid>
+<div class="page-head"><h1>Your Wishlist</h1></div><main class="wrap" id="r" style="padding-bottom:120px"></main>
+<script src="data.js"></script><script src="app.js"></script>
+<script>
+const r=document.getElementById('r'),ids=getWish();r.innerHTML=ids.length?'<div class="grid">'+ids.map(getProduct).filter(Boolean).map(pcard).join('')+'</div>':'<div class="empty"><h2>Nothing saved yet</h2><p>Tap the heart on any piece to save it here.</p><a class="btn btn-solid" style="margin-top:20px" href="sarees.html">Browse Sarees</a></div>';bindWish(r);r.querySelectorAll('.wish').forEach(b=>b.addEventListener('click',()=>setTimeout(()=>location.reload(),150)))
+</script></body></html>

@@ -1,0 +1,6 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link href="https://fonts.googleapis.com/css2?family=Annie+Use+Your+Telescope&family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"><title>All Sarees — La Perlyn</title></head><body data-solid>
+<div class="page-head"><h1>All Sarees</h1></div><main class="wrap" style="padding-bottom:120px"><div class="grid" id="grid"></div></main>
+<script src="data.js"></script><script src="app.js"></script>
+<script>
+const g=document.getElementById('grid');g.innerHTML=PRODUCTS.map(pcard).join('');bindWish(g)
+</script></body></html>

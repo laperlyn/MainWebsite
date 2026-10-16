@@ -1,0 +1,14 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link href="https://fonts.googleapis.com/css2?family=Annie+Use+Your+Telescope&family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"><title>Product — La Perlyn</title></head><body data-solid>
+<main class="wrap" id="r"></main>
+<script src="data.js"></script><script src="app.js"></script>
+<script>
+const p=getProduct(new URLSearchParams(location.search).get('id')),r=document.getElementById('r');
+if(!p)r.innerHTML='<div class="empty" style="padding-top:170px"><h2>Saree not found</h2><a class="btn btn-solid" style="margin-top:20px" href="sarees.html">Back to shop</a></div>';
+else{document.title=p.name+' — La Perlyn';const w=getWish().includes(p.id);
+r.innerHTML=`<div class="pd"><div><div class="pdmain"><img id="m" src="${p.images[0]}" alt="${p.name}"></div>${p.images.length>1?`<div class="thumbs">${p.images.map((s,i)=>`<img src="${s}" class="${i?'':'on'}" alt="">`).join('')}</div>`:''}</div><div class="pdi"><h1>${p.name}</h1><div class="pdp">${money(p.price)}${p.mrp?`<span class="was">${money(p.mrp)}</span>`:''}</div><p class="pdd">${p.desc}</p><div class="meta"><div><span>Fabric</span><span>${p.fabric}</span></div><div><span>Blouse</span><span>${p.blouse}</span></div><div><span>Length</span><span>${p.length}</span></div></div><div class="qty"><span>Qty</span><button id="mn">−</button><span id="qv">1</span><button id="pl">+</button></div><div class="acts"><button class="btn btn-lav" id="add">Add to Cart</button><button class="wish ${w?'on':''}" id="wb">${w?'♥ Saved':'♡ Wishlist'}</button></div></div></div>`;
+let q=1;const add=document.getElementById('add'),qv=document.getElementById('qv'),ch=d=>{q=Math.max(1,q+d);qv.textContent=q;add.textContent='Add to Cart'};
+document.getElementById('mn').onclick=()=>ch(-1);document.getElementById('pl').onclick=()=>ch(1);
+add.onclick=()=>{addToCart(p.id,q);add.textContent='Added ✓'};
+const wb=document.getElementById('wb');wb.onclick=()=>{const on=toggleWish(p.id);wb.classList.toggle('on',on);wb.textContent=on?'♥ Saved':'♡ Wishlist'};
+document.querySelectorAll('.thumbs img').forEach(t=>t.onclick=()=>{document.getElementById('m').src=t.src;document.querySelectorAll('.thumbs img').forEach(x=>x.classList.remove('on'));t.classList.add('on')})}
+</script></body></html>
