@@ -1,0 +1,18 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link href="https://fonts.googleapis.com/css2?family=Annie+Use+Your+Telescope&family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"><title>Product — La Perlyn</title></head><body data-solid>
+<main class="wrap" id="r" style="padding-top:150px;min-height:70vh"></main>
+<script src="data.js"></script><script src="app.js"></script>
+<script>
+const r=document.getElementById('r');
+withProducts(r,()=>{r.style.paddingTop='0';
+const p=getProduct(new URLSearchParams(location.search).get('id'));
+if(!p){r.innerHTML='<div class="empty" style="padding-top:170px"><h2>Saree not found</h2><p>It may have sold out or the link is outdated.</p><a class="btn btn-solid" style="margin-top:20px" href="sarees.html">Back to shop</a></div>';return}
+document.title=p.name+' — La Perlyn';
+const w=getWish().includes(p.id),sold=p.stock!=null&&p.stock<=0,low=p.stock!=null&&p.stock>0&&p.stock<=5,cat=p.category?p.category[0].toUpperCase()+p.category.slice(1):'';
+r.innerHTML=`<div class="pd"><div><div class="pdmain"><img id="m" src="${esc(p.images[0])}" alt="${esc(p.name)}" ${IMG_ERR}></div>${p.images.length>1?`<div class="thumbs">${p.images.map((s,i)=>`<img src="${esc(s)}" class="${i?'':'on'}" alt="" ${IMG_ERR}>`).join('')}</div>`:''}</div><div class="pdi"><h1>${esc(p.name)}</h1><div class="pdp">${money(p.price)}${p.mrp?`<span class="was">${money(p.mrp)}</span>`:''}</div>${p.desc?`<p class="pdd">${esc(p.desc)}</p>`:''}<div class="meta">${p.fabric?`<div><span>Fabric</span><span>${esc(p.fabric)}</span></div>`:''}${cat?`<div><span>Category</span><span>${esc(cat)}</span></div>`:''}<div><span>Availability</span><span>${sold?'Sold out':'In stock'}</span></div></div>${low?`<div class="lowstock">Only ${p.stock} left</div>`:''}${sold?'':'<div class="qty"><span>Qty</span><button id="mn">−</button><span id="qv">1</span><button id="pl">+</button></div>'}<div class="acts"><button class="btn btn-lav" id="add" ${sold?'disabled':''}>${sold?'Sold Out':'Add to Cart'}</button><button class="wish ${w?'on':''}" id="wb">${w?'♥ Saved':'♡ Wishlist'}</button></div></div></div>`;
+const add=document.getElementById('add'),qv=document.getElementById('qv');let q=1;
+if(!sold){const ch=d=>{q=Math.min(maxQty(p.id),Math.max(1,q+d));qv.textContent=q;add.textContent='Add to Cart'};
+ document.getElementById('mn').onclick=()=>ch(-1);document.getElementById('pl').onclick=()=>ch(1);
+ add.onclick=()=>{addToCart(p.id,q);add.textContent='Added ✓'}}
+const wb=document.getElementById('wb');wb.onclick=()=>{const on=toggleWish(p.id);wb.classList.toggle('on',on);wb.textContent=on?'♥ Saved':'♡ Wishlist'};
+document.querySelectorAll('.thumbs img').forEach(t=>t.onclick=()=>{document.getElementById('m').src=t.src;document.querySelectorAll('.thumbs img').forEach(x=>x.classList.remove('on'));t.classList.add('on')})});
+</script></body></html>

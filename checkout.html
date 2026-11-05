@@ -1,0 +1,29 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link href="https://fonts.googleapis.com/css2?family=Annie+Use+Your+Telescope&family=Cormorant+Garamond:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"><title>Checkout — La Perlyn</title></head><body data-solid>
+<div class="page-head"><h1>Checkout</h1></div><main class="wrap" id="r" style="padding-bottom:120px"></main>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script><script src="data.js"></script><script src="app.js"></script>
+<script>
+const r=document.getElementById('r');
+withProducts(r,()=>{const c=getCart();
+if(!c.length){r.innerHTML='<div class="empty"><h2>Your bag is empty</h2><a class="btn btn-solid" style="margin-top:20px" href="sarees.html">Shop Sarees</a></div>';return}
+const t=totals(),label='Pay '+money(t.total);
+r.innerHTML=`<div class="lay"><form class="fc" id="f"><h3>Shipping Details <small style="font-size:12px;color:var(--soft);font-weight:400">(* required)</small></h3><div class="fr"><input required name="firstName" placeholder="First name *" autocomplete="given-name"><input required name="lastName" placeholder="Last name *" autocomplete="family-name"></div><div class="fr"><input required type="email" name="email" placeholder="Email *" autocomplete="email"><input required type="tel" name="phone" placeholder="Phone *" autocomplete="tel"></div><input required name="address" placeholder="Address *" style="margin-bottom:16px" autocomplete="street-address"><div class="fr"><input required name="city" placeholder="City *"><input required name="state" placeholder="State *"></div><div class="fr"><input required name="pincode" placeholder="PIN code *" inputmode="numeric"><input required name="country" placeholder="Country *" value="India"></div><h3 style="margin-top:8px">Payment</h3><select name="payment_method"><option value="online">Pay online — UPI / Cards / Netbanking</option><option value="cod">Cash on Delivery</option></select><div class="formerr" id="err" role="alert"></div><button class="btn btn-lav block" id="pay" style="margin-top:8px">${label}</button></form><div class="sum"><h3>Order Summary</h3>${c.map(l=>{const p=getProduct(l.id);return`<div class="row"><span>${esc(p.name)} × ${l.qty}</span><span>${money(p.price*l.qty)}</span></div>`}).join('')}<div class="row" style="margin-top:10px"><span>Subtotal</span><span>${money(t.sub)}</span></div><div class="row"><span>Shipping</span><span>${t.ship?money(t.ship):'Free'}</span></div>${TAX_RATE?`<div class="row"><span>Tax (${+(TAX_RATE*100).toFixed(2)}%)</span><span>${money(t.tax)}</span></div>`:''}<div class="row t"><span>Total</span><span>${money(t.total)}</span></div></div></div>`;
+const f=document.getElementById('f'),btn=document.getElementById('pay'),err=document.getElementById('err');
+f.payment_method.onchange=()=>{btn.textContent=f.payment_method.value==='cod'?'Place Order — '+money(t.total):label};
+const fail=m=>{err.textContent=m;btn.disabled=false;btn.textContent=f.payment_method.value==='cod'?'Place Order — '+money(t.total):label};
+const done=o=>{localStorage.setItem(LS.o,JSON.stringify({id:o.order_number,status:o.status,payment_method:o.payment_method,customer:{firstName:o.first_name,email:o.email,city:o.city,state:o.state},items:o.items.map(i=>({name:i.name,qty:i.quantity,price:i.price})),totals:{total:o.total}}));saveCart([]);location.href='order-placed.html?id='+o.order_number};
+const post=(fn,body)=>fetch(FUNCTIONS_URL+'/'+fn,{method:'POST',headers:{'Content-Type':'application/json',apikey:SUPABASE_KEY},body:JSON.stringify(body)});
+f.onsubmit=async e=>{e.preventDefault();err.textContent='';btn.disabled=true;btn.textContent='Processing…';
+ const fd=Object.fromEntries(new FormData(f));let res,d;
+ try{res=await post('create-order',{items:c.map(l=>({id:l.id,qty:l.qty})),customer:fd,payment_method:fd.payment_method});d=await res.json()}catch{return fail('Network error — please check your connection and try again.')}
+ if(!res.ok)return fail(d.error||'Could not place your order. Please try again.');
+ if(d.mode==='cod')return done(d.order);
+ if(!window.Razorpay)return fail('The payment window could not load. Please refresh and try again.');
+ let paid=false;
+ const rz=new Razorpay({key:d.razorpay.key_id,order_id:d.razorpay.order_id,amount:d.razorpay.amount,currency:d.razorpay.currency,name:'La Perlyn',description:'Order '+d.order.order_number,prefill:{name:fd.firstName+' '+fd.lastName,email:fd.email,contact:fd.phone},theme:{color:'#C5A8DE'},
+  handler:async resp=>{paid=true;btn.textContent='Confirming payment…';
+   try{const v=await post('verify-payment',resp),vd=await v.json();if(!v.ok)throw 0;done(vd.order)}
+   catch{err.textContent='Your payment was received, but we could not confirm it on screen. Please do NOT pay again — email us with order '+d.order.order_number+' and we will sort it out.'}},
+  modal:{ondismiss:()=>{if(!paid)fail('Payment cancelled — your bag is saved, you can try again.')}}});
+ rz.on('payment.failed',x=>fail(x.error?.description||'Payment failed. Please try again.'));
+ rz.open()}});
+</script></body></html>
